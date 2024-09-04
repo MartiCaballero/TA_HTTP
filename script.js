@@ -35,9 +35,31 @@ async function FuncionPOST(product) {
   });
 }
 
-
-async function FuncionDELETE() {
+async function FuncionDELETE(id) {
+  let url = `http://localhost:3000/api/tasks/${id}`;
+  console.log(url);
   
+  await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).catch((err) => {
+    console.log(err);
+  });
+}
+
+async function FuncionPUT(product) {
+  let url = 'http://localhost:3000/api/tasks/0';
+  await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ...product }),
+  }).catch((err) => {
+    console.log(err);
+  });
 }
 
 function filterList() {
@@ -83,7 +105,7 @@ function newProduct() {
     // products.push(newProduct);
 
     // filteredProducts = products;
-    location.reload()
+    location.reload();
     // displayProducts();
 
     document.getElementById('newProductName').value = '';
@@ -110,8 +132,8 @@ function displayProducts() {
   } else {
     filteredProducts.forEach((product, index) => {
       const productCard = `
-    <div class="card" draggable="true" id="product-${index}" onclick="showDetails(this.innerHTML)">
-      <div class="card-image">
+    <div class="card" draggable="true" onclick="showDetails(this.innerHTML)">
+      <div class="card-image" id="${product.id}">
             <figure class="image is-4by3">
               <img
                 src="${product.image}"
@@ -200,10 +222,11 @@ function showDetails(rawProduct) {
   const description = product.querySelector('.content').textContent;
   const imageUrl = product.querySelector('img').src;
 
-  console.log('Product Name:', name);
-  console.log('Product Price:', price);
-  console.log('Product Description:', description);
-  console.log('Product Image URL:', imageUrl);
+  const tempContainer = document.createElement('div');
+  tempContainer.innerHTML = rawProduct;
+  const firstElement = tempContainer.firstElementChild;
+
+  const id = firstElement ? firstElement.id : null;
 
   const modalContent = document.getElementById('modalProductDetailsContent');
   modalContent.innerHTML = `
@@ -220,6 +243,7 @@ function showDetails(rawProduct) {
           alt="${name}"
         />
       </figure>
+      <button class="button is-link is-rounded" onclick="FuncionDELETE(${id})">Delete Product</button>
     </div>
   `;
 }
