@@ -39,7 +39,7 @@ async function FuncionDELETE(id) {
   let url = `http://localhost:3000/api/tasks/${id}`;
   console.log(url);
   
-  await fetch(url, {
+  let res = await fetch(url, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -47,6 +47,9 @@ async function FuncionDELETE(id) {
   }).catch((err) => {
     console.log(err);
   });
+
+  console.log(res);
+  
 }
 
 async function FuncionPUT(product) {
